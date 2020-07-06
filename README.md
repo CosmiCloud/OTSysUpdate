@@ -1,5 +1,5 @@
 # OTSysUpdate
-This will help you set up a cronjob that will trigger a script at 4am every Sunday that runs system updates on your node's server instance. <br><br>If the node is updating or bidding on a job, the update will be delayed for another week and the node will not be stopped. <br><br>A @reboot cronjob is used to initiate node start up on reboot after the update is finished. 
+This will help you set up a cronjob that will trigger a script at 4am every Sunday that runs system updates on your node's VPS instance. <br><br>If the node is updating or bidding on a job, the update will be delayed for another week and the node will not be stopped. <br><br>A @reboot cronjob is used to initiate node start up on reboot after the update is finished.
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
