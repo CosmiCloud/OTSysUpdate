@@ -6,7 +6,7 @@ require('dotenv').config();
 var stopNode = 'sudo docker stop otnode'
 var sysUpdate = 'sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y'
 var reboot = 'sudo reboot'
-var updateCheck = "sudo docker logs --since 30m otnode | grep 'Update ready'"
+var updateCheck = "sudo docker logs --since 30m otnode | grep 'Downloading update:'"
 var biddingCheck = "sudo docker logs --since 10m otnode | grep 'Replication finished for offer'"
 
 function PushNotification(PushTitle, PushText)
