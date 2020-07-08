@@ -30,4 +30,4 @@ Add 2 cronjobs to the bottom of your crontab. 1 to trigger the script and the ot
 </ol>
 
 0 4 * * 0 root cd ~/path/to/my/script && node update.js<br>
-@reboot root docker start otnode
+@reboot root cd ~/path/to/my/script && node startNode.js
