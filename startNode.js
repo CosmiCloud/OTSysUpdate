@@ -3,6 +3,11 @@ const querystring = require('querystring');
 const https = require("https");
 require('dotenv').config();
 
+var stopNode = 'sudo docker stop otnode'
+var sysUpdate = 'sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y'
+var reboot = 'sudo reboot'
+var updateCheck = "sudo docker logs --since 30m otnode | grep 'Downloading update:'"
+var biddingCheck = "sudo docker logs --since 10m otnode | grep 'Replication finished for offer'"
 var startNode = 'sudo docker start otnode'
 
 function PushNotification(PushTitle, PushText)
@@ -43,10 +48,58 @@ function PushNotification(PushTitle, PushText)
      });
     }
 
-exec(startNode, (error, start, stderr) => {
-    if (error){
-        PushNotification(process.env.NODENAME + " failed to start after an update.",'Node not started.');
-    }else{
-        PushNotification(process.env.NODENAME + " restarted from an update.",'Node started.');
-    }
+exec(updateCheck, (error, stdout, stderr) => {
+  if (stdout){
+    PushNotification(process.env.NODENAME + " system update prevented.","Delaying system update... Node was updating.");
+    console.log('Delaying system update... Node is updating.');
+  }else{
+    exec(biddingCheck, (error, stdout, stderr) => {
+      if (stdout){
+        PushNotification(process.env.NODENAME + " system update prevented.","Delaying system update... Node was bidding.");
+        console.log('Delaying system update... Node is currently bidding.');
+      }else{
+        exec(stopNode, (error, stdout, stderr) => {
+          if (error){
+            PushNotification(process.env.NODENAME + " system update failed.",error);
+            console.log('Failed to stop node.');
+          }
+          else{
+            console.log('Node stopped.');
+            console.log('Updating system...');
+            exec(sysUpdate, (error, stdout, stderr) => {
+              if (error){
+                PushNotification(process.env.NODENAME + " system update failed.",error);
+                console.log('Failed to update system.');
+                exec(startNode, (error, start, stderr) => {
+                    if (error){
+                        PushNotification(process.env.NODENAME + " failed to start after a failed system update.",error);
+                    }else{
+                        PushNotification(process.env.NODENAME + " restarted from a failed update.",'Node started.');
+                    }
+                });
+              }
+              else{
+                console.log('System update complete.');
+                console.log('Rebooting...');
+                PushNotification(process.env.NODENAME + " rebooted for a system update.","Stand by for reboot confirmation.");
+                exec(reboot, (error, stdout, stderr) => {
+                  if (error){
+                    PushNotification(process.env.NODENAME + " system update failed.",error);
+                    console.log('Failed to reboot.');
+                    exec(startNode, (error, start, stderr) => {
+                        if (error){
+                            PushNotification(process.env.NODENAME + " failed to start after a failed reboot.",error);
+                        }else{
+                            PushNotification(process.env.NODENAME + " restarted from a failed reboot.",'Node started.');
+                        }
+                    });
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
+    });
+  }
 });
