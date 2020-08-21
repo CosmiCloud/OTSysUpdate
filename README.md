@@ -1,5 +1,5 @@
 # OTSysUpdate
-This will help you set up a cronjob that will trigger a script at 4am every Sunday that runs system updates on your node's VPS instance. <br><br>If the node is updating or bidding on a job, the update will be delayed for another week and the node will not be stopped. <br><br>A @reboot cronjob is used to initiate node start up on reboot after the update is finished. You will receive a Push notification whenever ever the script completes or fails. If the script does fail, the notification will include log statements to identify the issue.
+This will help you set up a cronjob that will trigger a script at 4am every Sunday that runs system updates on your node's VPS instance. <br><br>If the node is updating or bidding on a job, the update will be delayed for another week and the node will not be stopped. <br><br>A @reboot cronjob is used to initiate node start up on reboot after the update is finished. You will receive a Push notification whenever the script completes or fails. If the script does fail, the notification will include log statements to identify the issue.
 <br><br>
 Install the 'Notify My Device' app from the app store and install it onto your mobile device.
 <br><br>
