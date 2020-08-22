@@ -47,6 +47,6 @@ exec(startNode, (error, start, stderr) => {
     if (error){
         PushNotification(process.env.NODENAME + " failed to start after an update.",error);
     }else{
-        PushNotification(process.env.NODENAME + " restarted from an update.",error);
+        PushNotification(process.env.NODENAME + " restarted from an update.",'Node started.');
     }
 });
