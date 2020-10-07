@@ -8,6 +8,7 @@ var sysUpdate = 'sudo apt update && sudo apt upgrade -y && sudo apt autoremove -
 var reboot = 'sudo reboot'
 var updateCheck = "sudo docker logs --since 30m otnode | grep 'Downloading update:'"
 var biddingCheck = "sudo docker logs --since 10m otnode | grep 'Replication finished for offer'"
+var startNode = 'sudo docker start otnode'
 
 function PushNotification(PushTitle, PushText)
     {
@@ -67,8 +68,15 @@ exec(updateCheck, (error, stdout, stderr) => {
             console.log('Updating system...');
             exec(sysUpdate, (error, stdout, stderr) => {
               if (error){
-                PushNotification(process.env.NODENAME + " system update failed.","Failed to update system.");
+                PushNotification(process.env.NODENAME + " system update failed.",error);
                 console.log('Failed to update system.');
+                  exec(startNode, (error, start, stderr) => {
+                        if (error){
+                            PushNotification(process.env.NODENAME + " failed to start after a failed system update.",error);
+                        }else{
+                            PushNotification(process.env.NODENAME + " restarted after a failed system update.",'Node started.');
+                        }
+                    });
               }
               else{
                 console.log('System update complete.');
